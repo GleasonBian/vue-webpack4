@@ -15,18 +15,18 @@ module.exports = {
   entry: './src/main.js', //入口
   module: {
     rules: [
-      {
+      { // 加载 vue 文件
         test: /\.vue$/,
         loader: 'vue-loader'
       },
-      {
-        test: /\.(sa|sc|c)ss$/,
+      { // 加载 css
+        test: /\.css$/,
         use: [
           'style-loader',
           'css-loader',
         ],
       },
-      {
+      { // 加载 图片
         test: /\.(png|svg|jpg|gif)$/,
         use: [
           {
@@ -39,6 +39,24 @@ module.exports = {
           },
         ]
       },
+      { // 加载 字体
+        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        use: [
+          'file-loader'
+        ]
+      },
+      { // 加载 数据
+        test: /\.(csv|tsv)$/,
+        use: [
+          'csv-loader'
+        ]
+      },
+      { // 加载 数据
+        test: /\.xml$/,
+        use: [
+          'xml-loader'
+        ]
+      }
     ]
   },
   plugins: [
