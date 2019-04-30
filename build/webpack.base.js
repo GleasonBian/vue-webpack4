@@ -18,7 +18,27 @@ module.exports = {
       {
         test: /\.vue$/,
         loader: 'vue-loader'
-      }
+      },
+      {
+        test: /\.(sa|sc|c)ss$/,
+        use: [
+          'style-loader',
+          'css-loader',
+        ],
+      },
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              limit: 5000,
+              // 分离图片至imgs文件夹
+              name: "imgs/[name].[ext]",
+            }
+          },
+        ]
+      },
     ]
   },
   plugins: [
