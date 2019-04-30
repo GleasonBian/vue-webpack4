@@ -10,5 +10,11 @@
 
    `npm install webpack webpack-cli webpack-dev-server webpack-merge --save-dev`
 
-   
+   + webpack@4.30.0
+   + webpack-cli@3.3.1
+   + webpack-dev-server@3.3.1
+   + webpack-merge@4.2.1
 
+4. 创建相应文件
+
+   
