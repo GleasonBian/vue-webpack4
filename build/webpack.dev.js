@@ -3,9 +3,10 @@
  * date: 2019/4/30
  * 开发环境配置
  */
+const path = require('path');
+// 合并配置文件
 const merge = require('webpack-merge');
 const common = require('./webpack.base.js');
-const path = require('path');
 
 module.exports = merge(common, {
   devtool: 'inline-source-map',
