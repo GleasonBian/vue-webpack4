@@ -5,7 +5,7 @@
  * 生产环境(prod)和开发环境(dev)通用配置
  */
 const webpack = require('webpack');
-
+const path = require('path')
 // vue 核心解析插件
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
