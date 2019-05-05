@@ -10,13 +10,16 @@ export default {
   name: 'app',
   data(){
     return {
-      num : 0,
     }
   },
   methods: {
     clickHandle(){
-      let num2 = 1
-      console.log(this.num++ + num2)
+      this.axios.post('/api/wxsupplier/supplierProduct/listData').then(res=>{
+        console.log(res)
+      }).catch(err=>{
+        console.log(err)
+      })
+
     }
   },
 }
