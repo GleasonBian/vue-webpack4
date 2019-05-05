@@ -11,11 +11,13 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 // html 模板解析插件
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { resolve } = require('path');
 
 // happypack 多进程加快编译速度
 const HappyPack = require('happypack');
 const os = require('os');
 const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: './src/main.js', //入口
@@ -72,7 +74,7 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        loader: 'babel-loader', 
+        loader: 'babel-loader',
       }
     ]
   },
@@ -99,5 +101,21 @@ module.exports = {
       //允许 HappyPack 输出日志
       verbose: true
     }),
+    // 解决vender后面的hash每次都改变
+    new webpack.HashedModuleIdsPlugin(),
+    new CopyWebpackPlugin([
+      {
+        from: path.resolve(__dirname, '../static'),
+        to: 'static',
+        ignore: ['.*'],
+      },
+    ]),
   ],
+  resolve: {
+    extensions: ['.js', '.vue'],
+    alias: {
+      vue: 'vue/dist/vue.esm.js',
+      '@': resolve('src'),
+    },
+  },
 };

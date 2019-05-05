@@ -17,6 +17,36 @@ module.exports = merge(common, {
     filename: 'js/[name].[hash].js', // 每次保存 hash 都变化
     path: path.resolve(__dirname, '../dist')
   },
-  module: {},
+  module: {
+    rules: [
+      {
+        test: /\.(sa|sc|c)ss$/,
+        use: [
+          'style-loader',
+          'css-loader',
+        ],
+      },
+      {
+        test: /\.less$/,
+        use: [
+          'style-loader',
+          'css-loader',
+        ],
+      },
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              limit: 5000,
+              name: 'imgs/[name].[ext]',
+              // publicPath: '../'
+            },
+          },
+        ],
+      },
+    ],
+  },
   mode: 'development',
 });

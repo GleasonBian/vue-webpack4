@@ -5,6 +5,7 @@
   "author": "Gleason <bianliuzhu@gmail.com>",
   "private": true,
   "dependencies": {
+    "copy-webpack-plugin": "^5.0.3",
     "vue": "^2.6.10",
     "vue-loader": "^15.7.0"
   },
