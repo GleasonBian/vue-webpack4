@@ -598,12 +598,281 @@
       };
       ```
    
-   3. 分离不常变化的文件，如 node_modules 下引用的库
+   3. 分离不常变化的文件，如 node_modules 下引用的库(配置 webpack.prod.js)
    
-      ```
+      ```javascript
+      /**
+       * author: gleasonBian
+       * date: 2019/4/30
+       * 生产环境配置(prod)
+       */
       
+      const path = require("path");
+      // 合并配置文件
+      const merge = require("webpack-merge");
+      const common = require("./webpack.base.js");
+      // 打包之前清除文件
+      const CleanWebpackPlugin = require("clean-webpack-plugin");
+      // 压缩CSS插件
+      const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+      module.exports = merge(common, {
+        optimization: {
+          // 分离chunks
+          splitChunks: {
+            chunks: "all",
+            cacheGroups: {
+              vendor: {
+                name: "vendor",
+                test: /[\\/]node_modules[\\/]/,
+                priority: 10,
+                chunks: "initial" // 只打包初始时依赖的第三方
+              }
+            }
+          },
+        },
+        module: {
+          rules: [
+            {
+              test: /\.css$/,
+              use: [
+                {
+                  loader: MiniCssExtractPlugin.loader,
+                  options: {
+                    // 可以在此处指定publicPath
+                    // 默认情况下 在 webpackOptions.output 中使用 publicPath 
+                    publicPath: "../"
+                  }
+                },
+                "css-loader",
+              ]
+            },
+            {
+              test: /\.(png|svg|jpg|gif)$/,
+              use: [
+                {
+                  loader: "file-loader",
+                  options: {
+                    limit: 5000,
+                    name: "imgs/[hash].[ext]"
+                  }
+                },
+                // 图片压缩
+                {
+                  loader: "image-webpack-loader",
+                  options: {
+                    //   bypassOnDebug: true,
+                    mozjpeg: {
+                      progressive: true,
+                      quality: 65
+                    },
+                    optipng: {
+                      enabled: false
+                    },
+                    pngquant: {
+                      quality: "65-90",
+                      speed: 4
+                    },
+                    gifsicle: {
+                      interlaced: false
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        plugins: [
+          new CleanWebpackPlugin(),
+          new MiniCssExtractPlugin({
+            // Options similar to the same options in webpackOptions.output
+            // both options are optional
+            filename: "css/[name].[hash].css",
+            chunkFilename: "css/[id].[hash].css"
+          })
+        ],
+        mode: "production",
+        output: {
+          filename: "js/[name].[contenthash].js",
+          path: path.resolve(__dirname, "../dist")
+        }
+      });
+      ```
+   
+      如此配置，则打包的 js 文件夹中会多一个 vendor.js
+   
+   4. 压缩CSS和JS代码
+   
+      安装 optimize-css-assets-webpack-plugin 和 uglifyjs-webpack-plugin 插件
+   
+      `cnpm install  optimize-css-assets-webpack-plugin --save`
+   
+      +  optimize-css-assets-webpack-plugin@5.0.1 › cssnano@4.1.10 › postcss@^7.0.0(7.0.16)
+   
+      `cnpm install uglifyjs-webpack-plugin --save-dev`
+   
+      + uglifyjs-webpack-plugin@2.1.2
+   
+      配置 webpack.prod.js 文件
+   
+      ```javascript
+      
+      /**
+       * author: gleasonBian
+       * date: 2019/4/30
+       * 生产环境配置(prod)
+       */
+      
+      const path = require("path");
+      // 合并配置文件
+      const merge = require("webpack-merge");
+      const common = require("./webpack.base.js");
+      // 打包之前清除文件
+      const CleanWebpackPlugin = require("clean-webpack-plugin");
+      // 压缩CSS插件
+      const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+      
+      // 压缩CSS和JS代码
+      const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+      const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+      module.exports = merge(common, {
+        optimization: {
+          // 分离chunks
+          splitChunks: {
+            chunks: "all",
+            cacheGroups: {
+              vendor: {
+                name: "vendor",
+                test: /[\\/]node_modules[\\/]/,
+                priority: 10,
+                chunks: "initial" // 只打包初始时依赖的第三方
+              }
+            }
+          },
+          minimizer: [
+            // 压缩JS (暂不压缩)
+            // 压缩css
+            new OptimizeCSSAssetsPlugin({})
+          ]
+        },
+        module: {
+          rules: [
+            {
+              test: /\.css$/,
+              use: [
+                {
+                  loader: MiniCssExtractPlugin.loader,
+                  options: {
+                    // 可以在此处指定publicPath
+                    // 默认情况下 在 webpackOptions.output 中使用 publicPath 
+                    publicPath: "../"
+                  }
+                },
+                "css-loader",
+              ]
+            },
+            {
+              test: /\.(png|svg|jpg|gif)$/,
+              use: [
+                {
+                  loader: "file-loader",
+                  options: {
+                    limit: 5000,
+                    name: "imgs/[hash].[ext]"
+                  }
+                },
+                // 图片压缩
+                {
+                  loader: "image-webpack-loader",
+                  options: {
+                    //   bypassOnDebug: true,
+                    mozjpeg: {
+                      progressive: true,
+                      quality: 65
+                    },
+                    optipng: {
+                      enabled: false
+                    },
+                    pngquant: {
+                      quality: "65-90",
+                      speed: 4
+                    },
+                    gifsicle: {
+                      interlaced: false
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        plugins: [
+          new CleanWebpackPlugin(),
+          new MiniCssExtractPlugin({
+            // Options similar to the same options in webpackOptions.output
+            // both options are optional
+            filename: "css/[name].[hash].css",
+            chunkFilename: "css/[id].[hash].css"
+          })
+        ],
+        mode: "production",
+        output: {
+          filename: "js/[name].[contenthash].js",
+          path: path.resolve(__dirname, "../dist")
+        }
+      });
+      ```
+   
+      执行 npm run build 命令 打包 查看输出
+   
+   5. package.json 
+   
+      ```json
+      {
+        "name": "vue-webpack4",
+        "version": "1.0.0",
+        "description": "基于 webpack4+ 的 vue 项目",
+        "author": "Gleason <bianliuzhu@gmail.com>",
+        "private": true,
+        "dependencies": {
+          "vue": "^2.6.10",
+          "vue-loader": "^15.7.0"
+        },
+        "devDependencies": {
+          "babel-core": "^6.26.3",
+          "babel-loader": "^7.1.5",
+          "clean-webpack-plugin": "^2.0.1",
+          "css-loader": "^2.1.1",
+          "csv-loader": "^3.0.2",
+          "file-loader": "^3.0.1",
+          "happypack": "^5.0.1",
+          "html-webpack-plugin": "^3.2.0",
+          "mini-css-extract-plugin": "^0.6.0",
+          "optimize-css-assets-webpack-plugin": "^5.0.1",
+          "style-loader": "^0.23.1",
+          "uglifyjs-webpack-plugin": "^2.1.2",
+          "vue-template-compiler": "^2.6.10",
+          "webpack": "^4.30.0",
+          "webpack-cli": "^3.3.1",
+          "webpack-dev-server": "^3.3.1",
+          "webpack-merge": "^4.2.1",
+          "xml-loader": "^1.2.1"
+        },
+        "scripts": {
+          "start": "webpack-dev-server --hot --open --config build/webpack.dev.js",
+          "build": "webpack --config build/webpack.prod.js"
+        },
+        "repository": {
+          "type": "git",
+          "url": "git+https://github.com/GleasonBian/vue-webpack4.git"
+        },
+        "keywords": [],
+        "license": "ISC",
+        "bugs": {
+          "url": "https://github.com/GleasonBian/vue-webpack4/issues"
+        },
+        "homepage": "https://github.com/GleasonBian/vue-webpack4#readme"
+      }
       ```
    
       
-   
-   
+

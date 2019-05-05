@@ -1,79 +1,105 @@
+
 /**
  * author: gleasonBian
  * date: 2019/4/30
- * 生产环境配置
+ * 生产环境配置(prod)
  */
-const path = require('path');
+
+const path = require("path");
 // 合并配置文件
-const merge = require('webpack-merge');
-const common = require('./webpack.base.js');
+const merge = require("webpack-merge");
+const common = require("./webpack.base.js");
 // 打包之前清除文件
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-// 分离CSS插件
+const CleanWebpackPlugin = require("clean-webpack-plugin");
+// 压缩CSS插件
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+// 压缩CSS和JS代码
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 module.exports = merge(common, {
-  module: {},
-  plugins: [
-    new CleanWebpackPlugin(['dist/*'], {
-      root: path.resolve(__dirname, '../')
-    }),
-    new MiniCssExtractPlugin({
-      filename: "css/[name].[hash].css",
-      chunkFilename: 'css/[id].[hash].css'
-    }),
-  ],
-  rules: [
-    {
-      test: /\.css$/,
-      use: [
-        {
-          loader: MiniCssExtractPlugin.loader,
-          options: {
-            // you can specify a publicPath here
-            // by default it use publicPath in webpackOptions.output
-            publicPath: '../'
-          }
-        },
-        'css-loader',
-        'style-loader'
-      ],
+  optimization: {
+    // 分离chunks
+    splitChunks: {
+      chunks: "all",
+      cacheGroups: {
+        vendor: {
+          name: "vendor",
+          test: /[\\/]node_modules[\\/]/,
+          priority: 10,
+          chunks: "initial" // 只打包初始时依赖的第三方
+        }
+      }
     },
-    {
-      test: /\.(png|svg|jpg|gif)$/,
-      use: [
-        {
-          loader: 'file-loader',
-          options: {
-            limit: 5000,
-            name: "imgs/[hash].[ext]",
-          }
-        },
-        // 图片压缩
-        {
-          loader: 'image-webpack-loader',
-          options: {
-            //   bypassOnDebug: true,
-            mozjpeg: {
-              progressive: true,
-              quality: 65
-            },
-            optipng: {
-              enabled: false,
-            },
-            pngquant: {
-              quality: '65-90',
-              speed: 4
-            },
-            gifsicle: {
-              interlaced: false,
+    minimizer: [
+      // 压缩JS (暂不压缩)
+      // 压缩css
+      new OptimizeCSSAssetsPlugin({})
+    ]
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              // 可以在此处指定publicPath
+              // 默认情况下 在 webpackOptions.output 中使用 publicPath 
+              publicPath: "../"
             }
           },
-        },
-      ]
-    },
-  ],
-  output: {
-    filename: 'bundle/[name].[contenthash].js', //contenthash 若文件内容无变化，则contenthash 名称不变
-    path: path.resolve(__dirname, '../dist')
+          "css-loader",
+        ]
+      },
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              limit: 5000,
+              name: "imgs/[hash].[ext]"
+            }
+          },
+          // 图片压缩
+          {
+            loader: "image-webpack-loader",
+            options: {
+              //   bypassOnDebug: true,
+              mozjpeg: {
+                progressive: true,
+                quality: 65
+              },
+              optipng: {
+                enabled: false
+              },
+              pngquant: {
+                quality: "65-90",
+                speed: 4
+              },
+              gifsicle: {
+                interlaced: false
+              }
+            }
+          }
+        ]
+      }
+    ]
   },
+  plugins: [
+    new CleanWebpackPlugin(),
+    new MiniCssExtractPlugin({
+      // Options similar to the same options in webpackOptions.output
+      // both options are optional
+      filename: "css/[name].[hash].css",
+      chunkFilename: "css/[id].[hash].css"
+    })
+  ],
+  mode: "production",
+  output: {
+    filename: "js/[name].[contenthash].js",
+    path: path.resolve(__dirname, "../dist")
+  }
 });
