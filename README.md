@@ -1,96 +1,500 @@
-# vue-webpack4+
+3. # vue-webpack4+
 
-#### 一.项目搭建
-
-1. 创建 vue-webpack4 文件夹
-
-2. cmd 打开当前文件夹
-
-3. 安装 webpack 四件套
-
-   `npm install webpack webpack-cli webpack-dev-server webpack-merge --save-dev`
-
-   + webpack@4.30.0
-   + webpack-cli@3.3.1
-   + webpack-dev-server@3.3.1
-   + webpack-merge@4.2.1
-
-4. 创建相应文件
-
-   ![1556594159084](C:\Users\lzw\AppData\Roaming\Typora\typora-user-images\1556594159084.png)
-
-#### 二. 配置 webpack
-
-1. webpack.base.js
-
-   ```javascript
-   /**
-    * author: gleasonBian
-    * date: 2019/4/30
-    * 生产环境(prod)和开发环境(dev)通用配置
-    */
-   const webpack = require('webpack');
+   #### 一.项目搭建
    
-   module.exports = {
-     entry: './src/main.js', //入口
-     module: {
-       rules: []
-     },
-     plugins: [
-       // 解决vender后面的hash每次都改变
-       new webpack.HashedModuleIdsPlugin(),
-     ],
-   };
-   ```
-
-2. webpack.dev.js
-
-   ```javascript
-   /**
-    * author: gleasonBian
-    * date: 2019/4/30
-    * 开发环境配置
-    */
-   const merge = require('webpack-merge');
-   const common = require('./webpack.base.js');
-   const path = require('path');
+   > ```SPARQL
+   > // 为节省安装时间,使用阿里定制的 cnpm 命令行工具代替默认的 npm
+   > $ npm install -g cnpm --registry=https://registry.npm.taobao.org
+   > // 检测cnpm版本，如果安装成功可以看到cnpm的基本信息。
+   > $ cnpm -v
+   > // 安装时使用 cnpm install 即可
+   > $ cnpm install 包的名称
+   > ```
    
-   module.exports = merge(common, {
-     devtool: 'inline-source-map',
-     devServer: { // 开发服务器
-       contentBase: '../dist'
-     },
-     output: { // 输出
-       filename: 'js/[name].[hash].js', // 每次保存 hash 都变化
-       path: path.resolve(__dirname, '../dist')
-     },
-     module: {},
-     mode: 'development',
-   });
-   ```
-
-3. webpack.prod.js
-
-   ```javascript
-   /**
-    * author: gleasonBian
-    * date: 2019/4/30
-    * 生产环境配置
-    */
-   const path = require('path');
-   // 合并配置文件
-   const merge = require('webpack-merge');
-   const common = require('./webpack.base.js');
+   > ```java
+   > // 当前电脑 node 和 npm 版本
+   > cnpm@6.0.0 
+   > npm@6.9.0
+   > node@10.15.3 
+   > ```
    
-   module.exports = merge(common, {
-     module: {},
-     plugins: [],
-     mode: 'production',
-     output: {
-       filename: 'js/[name].[contenthash].js', //contenthash 若文件内容无变化，则contenthash 名称不变
-       path: path.resolve(__dirname, '../dist')
-     },
-   });
-   ```
+   1. 创建 vue-webpack4 文件夹
+   
+   2. cmd 打开 vue-webpack4 文件夹
 
+   3. 初始化 npm，然后在本地安装 webpack 四件套，
+   
+      `npm init -y`
+   
+      `npm install webpack webpack-cli webpack-dev-server webpack-merge --save-dev`
+   
+      - webpack@4.30.0
+      - webpack-cli@3.3.1
+      - webpack-dev-server@3.3.1
+      - webpack-merge@4.2.1
+   
+   4. 创建相应文件
+   
+      ![1556594159084](C:\Users\lzw\AppData\Roaming\Typora\typora-user-images\1556594159084.png)
+   
+   #### 二. 基本 webpack 配置
+   
+   1. webpack.base.js
+   
+      ```javascript
+      /**
+       * author: gleasonBian
+       * date: 2019/4/30
+       * 生产环境(prod)和开发环境(dev)通用配置
+       */
+      const webpack = require('webpack');
+      
+      module.exports = {
+        entry: './src/main.js', //入口
+        module: {
+          rules: []
+        },
+        plugins: [
+          // 解决vender后面的hash每次都改变
+          new webpack.HashedModuleIdsPlugin(),
+        ],
+      };
+      ```
+   
+   2. webpack.dev.js
+   
+      ```javascript
+      /**
+       * author: gleasonBian
+       * date: 2019/4/30
+       * 开发环境配置
+       */
+      const merge = require('webpack-merge');
+      const common = require('./webpack.base.js');
+      const path = require('path');
+      
+      module.exports = merge(common, {
+        devtool: 'inline-source-map',
+        devServer: { // 开发服务器
+          contentBase: '../dist'
+        },
+        output: { // 输出
+          filename: 'js/[name].[hash].js', // 每次保存 hash 都变化
+          path: path.resolve(__dirname, '../dist')
+        },
+        module: {},
+        mode: 'development',
+      });
+      ```
+   
+   3. webpack.prod.js
+   
+      ```javascript
+      /**
+       * author: gleasonBian
+       * date: 2019/4/30
+       * 生产环境配置
+       */
+      const path = require('path');
+      // 合并配置文件
+      const merge = require('webpack-merge');
+      const common = require('./webpack.base.js');
+      
+      module.exports = merge(common, {
+        module: {},
+        plugins: [],
+        mode: 'production',
+        output: {
+          filename: 'bundle/[name].[contenthash].js', //contenthash 若文件内容无变化，则contenthash 名称不变
+          path: path.resolve(__dirname, '../dist')
+        },
+      });
+      ```
+   
+   #### 三. 基本 vue 配置
+   
+   1. 安装 vue cli
+   
+      `npm install -g @vue/cli`
+   
+   2. 安装 vue
+   
+      `npm install vue`
+   
+      - vue@2.6.10
+   
+   3. 安装 vue 核心解析插件
+   
+      `npm install vue-loader vue-template-compiler --save-dev`
+   
+      - vue-loader@15.7.0
+      - vue-template-compiler@2.6.10
+   
+   4. 安装 html 模板解析插件
+   
+      `npm i html-webpack-plugin --save-dev`
+   
+      - html-webpack-plugin@3.2.0
+   
+   5. 设置 入口文件 project/src/main.js
+   
+      ```javascript
+      import Vue from 'vue'
+      
+      import App from './App.vue'
+      
+      new Vue({
+        el: '#app',
+        render: h => h(App),
+      });
+      
+      ```
+   
+   6. 配置主组件 project/src/App.vue
+   
+      ```javascript
+      <template>
+        <div id="app">
+          hello world
+        </div>
+      </template>
+      
+      <script>
+      export default {
+        name: 'app'
+      }
+      </script>
+      
+      <style scoped>
+      #app {
+        font-family: 'Avenir', Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-align: center;
+        color: #2c3e50;
+        margin-top: 60px;
+        transform: rotate(0deg);
+      }
+      </style>
+      ```
+   
+   7. indexhtml
+   
+      ```javascript
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8">
+          <title>Suporka Vue App</title>
+        </head>
+        <body>
+          <div id="app"></div>
+        </body>
+      </html>
+      ```
+   
+   8. 由于在开发和生产环境中都需要对vue文件的解析, 因此 解析 vue 配置在 webpack.base.js 中
+   
+      ```javascript
+      /**
+       * author: gleasonBian
+       * date: 2019/4/30
+       * 生产环境(prod)和开发环境(dev)通用配置
+       */
+      const webpack = require('webpack');
+      const path = require('path')
+      // vue 核心解析插件
+      const VueLoaderPlugin = require('vue-loader/lib/plugin');
+      
+      // html 模板解析插件
+      const HtmlWebpackPlugin = require('html-webpack-plugin');
+      module.exports = {
+        entry: './src/main.js', //入口
+        module: {
+          rules: [
+            {
+              test: /\.vue$/,
+              loader: 'vue-loader'
+            }
+          ]
+        },
+        plugins: [
+          // 解决vender后面的hash每次都改变
+          new webpack.HashedModuleIdsPlugin(),
+          // 请确保引入这个插件来施展魔法
+          new VueLoaderPlugin(),
+          // html 模板解析 插件
+          new HtmlWebpackPlugin({
+            template: path.resolve(__dirname, '../index.html'),
+          })
+        ],
+      };
+      ```
+   
+   9. package.json
+   
+      ```javascript
+      {
+        "name": "vue-webpack4",
+        "version": "1.0.0",
+        "description": "基于 webpack4+ 的 vue 项目",
+        "author": "Gleason <bianliuzhu@gmail.com>",
+        "private": true,
+        "dependencies": {
+          "vue": "^2.6.10"
+        },
+        "devDependencies": {
+          "html-webpack-plugin": "^3.2.0",
+          "vue-loader": "^15.7.0",
+          "vue-template-compiler": "^2.6.10",
+          "webpack": "^4.30.0",
+          "webpack-cli": "^3.3.1",
+          "webpack-dev-server": "^3.3.1",
+          "webpack-merge": "^4.2.1"
+        },
+        "scripts": {
+          "start": "webpack-dev-server --hot --open --config build/webpack.dev.js",
+          "build": "webpack --config build/webpack.prod.js"
+        },
+        "repository": {
+          "type": "git",
+          "url": "git+https://github.com/GleasonBian/vue-webpack4.git"
+        },
+        "keywords": [],
+        "license": "ISC",
+        "bugs": {
+          "url": "https://github.com/GleasonBian/vue-webpack4/issues"
+        },
+        "homepage": "https://github.com/GleasonBian/vue-webpack4#readme"
+      }
+      ```
+   
+   10. npm start 启动项目
+   
+       ![1556610968537](C:\Users\lzw\AppData\Roaming\Typora\typora-user-images\1556610968537.png)
+   
+   11. npm run build 打包项目 (生成dist文件夹)
+   
+       ![1556611166080](C:\Users\lzw\AppData\Roaming\Typora\typora-user-images\1556611166080.png)
+   
+   #### 四. 资源管理
+   
+   1. 加载 css
+   
+      `npm install --save-dev style-loader css-loader`
+   
+      - style-loader@0.23.1
+      - css-loader@2.1.1
+   
+   2. 加载 图片，字体
+   
+      `cnpm install --save-dev file-loader`
+   
+      - file-loader@3.0.1
+   
+   3. 加载数据
+   
+      `cnpm install --save-dev csv-loader xml-loader`
+   
+      - xml-loader@1.2.1
+      - csv-loader@3.0.2
+   
+   4. 配置 webpack.base.js
+   
+      ```javascript
+      /**
+       * author: gleasonBian
+       * date: 2019/4/30
+       * 生产环境(prod)和开发环境(dev)通用配置
+       */
+      const webpack = require('webpack');
+      const path = require('path')
+      // vue 核心解析插件
+      const VueLoaderPlugin = require('vue-loader/lib/plugin');
+      
+      // html 模板解析插件
+      const HtmlWebpackPlugin = require('html-webpack-plugin');
+      module.exports = {
+        entry: './src/main.js', //入口
+        module: {
+          rules: [
+            { // 加载 vue 文件
+              test: /\.vue$/,
+              loader: 'vue-loader'
+            },
+            { // 加载 css
+              test: /\.css$/,
+              use: [
+                'style-loader',
+                'css-loader',
+              ],
+            },
+            { // 加载 图片
+              test: /\.(png|svg|jpg|gif)$/,
+              use: [
+                {
+                  loader: 'file-loader',
+                  options: {
+                    limit: 5000,
+                    // 分离图片至imgs文件夹
+                    name: "imgs/[name].[ext]",
+                  }
+                },
+              ]
+            },
+            { // 加载 字体
+              test: /\.(woff|woff2|eot|ttf|otf)$/,
+              use: [
+                'file-loader'
+              ]
+            },
+            { // 加载 数据
+              test: /\.(csv|tsv)$/,
+              use: [
+                'csv-loader'
+              ]
+            },
+            { // 加载 数据
+              test: /\.xml$/,
+              use: [
+                'xml-loader'
+              ]
+            }
+          ]
+        },
+        plugins: [
+          // 解决vender后面的hash每次都改变
+          new webpack.HashedModuleIdsPlugin(),
+          // 请确保引入这个插件来施展魔法
+          new VueLoaderPlugin(),
+          // html 模板解析 插件
+          new HtmlWebpackPlugin({
+            template: path.resolve(__dirname, '../index.html'),
+          })
+        ],
+      };
+      ```
+   
+   #### 五. 管理输出
+   
+   1. 在每次构建前清理 `/dist` 文件夹，安装 [`clean-webpack-plugin`](https://www.npmjs.com/package/clean-webpack-plugin) 插件
+   
+      `cnpm install clean-webpack-plugin --save-dev`
+   
+      - clean-webpack-plugin@2.0.1
+   
+   2. 分离 css
+   
+      > webpack4 中使用 mini-css-extract-plugin 插件来分离 css。
+   
+      安装 mini-css-extract-plugin 插件
+   
+      `cnpm install mini-css-extract-plugin --save-dev`
+   
+      - mini-css-extract-plugin@0.6.0
+   
+   3. 配置 webpack.prod.js
+   
+      ```javascript
+      /**
+       * author: gleasonBian
+       * date: 2019/4/30
+       * 生产环境配置
+       */
+      const path = require('path');
+      // 合并配置文件
+      const merge = require('webpack-merge');
+      const common = require('./webpack.base.js');
+      // 打包之前清除文件
+      const CleanWebpackPlugin = require('clean-webpack-plugin');
+      // 分离CSS插件
+      const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+      module.exports = merge(common, {
+        module: {},
+        plugins: [
+          new CleanWebpackPlugin(['dist/*'], {
+            root: path.resolve(__dirname, '../')
+          }),
+          new MiniCssExtractPlugin({
+            filename: "css/[name].[hash].css",
+            chunkFilename: 'css/[id].[hash].css'
+          }),
+        ],
+        rules: [
+          {
+            test: /\.css$/,
+            use: [
+              {
+                loader: MiniCssExtractPlugin.loader,
+                options: {
+                  // you can specify a publicPath here
+                  // by default it use publicPath in webpackOptions.output
+                  publicPath: '../'
+                }
+              },
+              'css-loader',
+              'style-loader'
+            ],
+          },
+          {
+            test: /\.(png|svg|jpg|gif)$/,
+            use: [
+              {
+                loader: 'file-loader',
+                options: {
+                  limit: 5000,
+                  name: "imgs/[hash].[ext]",
+                }
+              },
+              // 图片压缩
+              {
+                loader: 'image-webpack-loader',
+                options: {
+                  //   bypassOnDebug: true,
+                  mozjpeg: {
+                    progressive: true,
+                    quality: 65
+                  },
+                  optipng: {
+                    enabled: false,
+                  },
+                  pngquant: {
+                    quality: '65-90',
+                    speed: 4
+                  },
+                  gifsicle: {
+                    interlaced: false,
+                  }
+                },
+              },
+            ]
+          },
+        ],
+        output: {
+          filename: 'bundle/[name].[contenthash].js', //contenthash 若文件内容无变化，则contenthash 名称不变
+          path: path.resolve(__dirname, '../dist')
+        },
+      });使用 happypack 多进程加快编译速度,同时也需要安装 babel 两件套
+      ```
+   
+   #### 六.  使用 happypack 多进程加快编译速度 
+   
+   > 同时也需要安装 babel 两件套
+   
+   1. 安装 babel-core
+   
+      `cnpm install babel-core --save-dev`
+   
+      - babel-core@6.26.3
+   
+      `cnpm install babel-loader@7.1.5 --save-dev`
+   
+      - babel-loader@7.1.5
+   
+      `cnpm install happypack --save-dev`
+   
+      - happypack@5.0.1
+   
+   2. 因为 happypack 开发环境生产环境都需要用到
+   
    
