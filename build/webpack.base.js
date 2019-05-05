@@ -86,6 +86,8 @@ module.exports = {
     // html 模板解析 插件
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, '../index.html'),
+      favicon: './favicon.ico', // 添加小图标
+      inject: true
     }),
     new HappyPack({
       //用id来标识 happypack处理类文件
