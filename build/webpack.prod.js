@@ -32,7 +32,19 @@ module.exports = merge(common, {
       }
     },
     minimizer: [
-      // 压缩JS (暂不压缩)
+      // 压缩JS
+      // new UglifyJsPlugin({
+        // uglifyOptions: {
+        //   compress: {
+        //     warnings: false, // 去除警告
+        //     drop_debugger: true, // 去除debugger
+        //     drop_console: true // 去除console.log
+        //   },
+        // },
+        // cache: true, // 开启缓存
+        // parallel: true, // 平行压缩
+        // sourceMap: false // 如果需要JS源映射，请设置为true
+      // }),
       // 压缩css
       new OptimizeCSSAssetsPlugin({})
     ]

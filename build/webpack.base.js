@@ -70,6 +70,10 @@ module.exports = {
         //排除node_modules 目录下的文件
         exclude: /node_modules/
       },
+      {
+        test: /\.js$/,
+        loader: 'babel-loader', 
+      }
     ]
   },
   plugins: [
