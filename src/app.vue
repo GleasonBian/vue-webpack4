@@ -1,7 +1,6 @@
 <template>
   <div id="app">
-    hello world
-    <button @click="clickHandle">click me</button>
+   <router-view/>
   </div>
 </template>
 
@@ -10,16 +9,6 @@ export default {
   name: 'app',
   data(){
     return {
-    }
-  },
-  methods: {
-    clickHandle(){
-      this.axios.post('/api/wxsupplier/supplierProduct/listData').then(res=>{
-        console.log(res)
-      }).catch(err=>{
-        console.log(err)
-      })
-
     }
   },
 }

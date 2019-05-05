@@ -1091,8 +1091,119 @@
    });
    ```
 
-   
+4. 安装 axios
 
-   
+   `cnpm install --save axios vue-axios`
 
+   + axios@0.18.0
+   + vue-axios@2.1.4
+
+5. src/main.js 中配置使用
+
+   ```javascript
+   import axios from 'axios'
+   import VueAxios from 'vue-axios'
+   Vue.use(VueAxios, axios)
+   ```
+
+#### 七. 配置 vue-router
+
+1. 安装 vue-router
+
+   `cnpm install vue-router --save`
+
+2. 配置 使用 vue-router
+
+   在 src 目录下创建 router.js
+
+   ```javascript
+   import Vue from 'vue'
+   import Router from 'vue-router'
+   import {resolve} from 'path';
+   Vue.use(Router)
    
+   const login = resolve => require(['@/components/login'], resolve);
+   const router = new Router({
+     mode: 'history',
+     routes: [
+       {
+         path: '/login',
+         name: 'login',
+         component: login,
+       },
+     ]
+   })
+   export default router
+   ```
+
+3. 在 src 目录下创建 components 文件夹
+
+4. 在 src/components目录下创建 login.vue
+
+   ```javascript
+   <template> 
+   <div>
+     <button @click="clickHandle">23232</button>
+   </div>
+   </template>
+   
+   <script>
+   export default {
+     name: "",
+     components: {},
+     data() {
+       return {};
+     },
+     computed: {},
+   
+     watch: {},
+   
+     methods: {
+       clickHandle(){
+         // 请替换自己的接口
+         this.axios.post('/api/wxsupplier/supplierProduct/listData').then(res=>{
+           console.log(res)
+         }).catch(err=>{
+           console.log(err)
+         })
+       }
+     },
+     /**
+      *
+      * 生命周期
+      *
+      */
+     created() {},
+     mounted() {}
+   };
+   </script>
+   <style  scoped>
+   </style>
+   ```
+   
+5. 调整 src/App.vue 文件
+
+   ```php+HTML
+   <template>
+     <div id="app">
+      <router-view/>
+     </div>
+   </template>
+   
+   <script>
+   export default {
+     name: 'app',
+     data(){
+       return {
+       }
+     },
+   }
+   </script>
+   
+   <style scoped>
+   
+   </style>
+   
+   ```
+
+6. 启动项目 npm start 查看运行效果
