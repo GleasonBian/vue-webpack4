@@ -1,7 +1,7 @@
-<template> 
-<div>
-  <button @click="clickHandle">23232</button>
-</div>
+<template>
+  <div>
+    <button @click="clickHandle">23232</button>
+  </div>
 </template>
 
 <script>
@@ -16,13 +16,15 @@ export default {
   watch: {},
 
   methods: {
-        clickHandle(){
-      this.axios.post('/api/wxsupplier/supplierProduct/listData').then(res=>{
-        console.log(res)
-      }).catch(err=>{
-        console.log(err)
-      })
-
+    clickHandle() {
+      this.axios
+        .post("/api/wxsupplier/supplierProduct/listData")
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   },
   /**

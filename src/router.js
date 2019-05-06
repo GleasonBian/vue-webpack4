@@ -8,7 +8,7 @@ const router = new Router({
   mode: 'history',
   routes: [
     {
-      path: '/login',
+      path: '/',
       name: 'login',
       component: login,
     },
